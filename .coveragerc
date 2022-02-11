@@ -1,0 +1,6 @@
+[run]
+omit = 
+        ./endosim/_version.py
+        ./endosim/__init__.py
+        ./endosim/__main__.py
+        ./endosim/ui/endosim_command_line.py
