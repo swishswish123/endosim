@@ -288,3 +288,30 @@ def calculate_euclid_dist(pointer_tip_in_mri_space,tumour_in_mri_space ):
             + (pointer_tip_in_mri_space[2] - tumour_in_mri_space[2]) \
             * (pointer_tip_in_mri_space[2] - tumour_in_mri_space[2])
     return dist
+
+
+def convert_points(p_13):
+    p_113 = np.zeros((1,1,3))
+    p_113[0][0][0] = p_13[0]
+    p_113[0][0][1] = p_13[1]
+    p_113[0][0][2] = p_13[2]
+    return p_113
+
+
+def convert_points_1x3_to_1x4x3(p_13):
+    p_113 = np.zeros((1,1,3))
+    p_113[0][0][0] = p_13[0]
+    p_113[0][0][1] = p_13[1]
+    p_113[0][0][2] = p_13[2]
+    return p_113
+
+
+def convert_points_nx3_to_1xnx3(pn3):
+    n = len(pn3)
+    p_1n3 = np.zeros((1,n,3))
+
+    for idx, point in enumerate(pn3):
+        p_1n3[:,idx ,:] = convert_points(point)
+
+
+    return p_1n3
