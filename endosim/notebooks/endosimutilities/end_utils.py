@@ -213,8 +213,8 @@ def project_camera_points_to_image(points, intrinsics, distortion):
     tvec = np.zeros((1,3))
     # convert_4x1_to_1x1x3(point)
 
-    #for idx in range(len(points)):
-    #    print(points[idx,:])
+    #for idx in range(points.shape[0]):
+        
     #    points[idx,:] = convert_4x1_to_1x1x3(np.array(points[idx,:]).T)
 
     image_points, jacobian = cv2.projectPoints(points, rvec, tvec, intrinsics, distortion)

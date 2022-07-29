@@ -27,19 +27,31 @@ def SIFT_matching(previous_image, current_image):
     print(len(keypoints_1), len(keypoints_2))
     print('fuond key points')
     # feature matching
-    bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
-
-    matches = bf.match(descriptors_1,descriptors_2)
+    #bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
+    bf = cv2.BFMatcher()
+    matches = bf.knnMatch(descriptors_1,descriptors_2,k=2)
+    #matches = bf.match(descriptors_1,descriptors_2)
     print('foound matches')
-    matches = sorted(matches, key = lambda x:x.distance)
+
+    # Apply ratio test
+    good = []
+    for m,n in matches:
+        if m.distance < 0.75*n.distance:
+            good.append([m])
+
+    #best_sorted_matches = sorted(good, key = lambda x:x.distance)
     print('sorted matches')
 
     print(len(matches))
-    img3 = cv2.drawMatches(img1, keypoints_1, img2, keypoints_2, matches[:1000], img2, flags=2)
-    print('draw matches')
-    plt.imshow(img3),plt.show()
+    #print(len(best_sorted_matches))
+    #img3 = cv2.drawMatches(img1, keypoints_1, img2, keypoints_2, best_sorted_matches, img2, flags=2)
+    img3 = cv2.drawMatchesKnn(img1,keypoints_1,img2,keypoints_2,good,None,flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 
-    return
+    print('draw matches')
+
+        #,plt.show()
+
+    return img3
 
 
 def remove_speckle(gray):
@@ -61,6 +73,7 @@ def remove_speckle(gray):
     plt.show()
 
     return
+
 
 def read_video():
 
@@ -89,9 +102,13 @@ def read_video():
             previous_image = current_image
             current_image = frame
 
-            SIFT_matching(previous_image, current_image)
+            img3 = SIFT_matching(previous_image, current_image)
 
-        frame_num +=  1
+            cv2.imshow('frame',img3)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        frame_num += 1
     # When everything done, release the capture
     cap.release()
     cv2.destroyAllWindows()
@@ -99,10 +116,6 @@ def read_video():
 
 def main():
     read_video()
-
-
-
-
     return
 
 

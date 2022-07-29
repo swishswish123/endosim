@@ -58,15 +58,41 @@ def plt_points(gray, frame):
     ax[1,1].set_title('between 1 and 2 std')
     plt.show()
 
-    return
+    return mask, mask_lower
 
 
-def get_corrected_img(img1, img2):
+def gen_keypoints(img1, img2, mask1, mask2):
+
+    msk = cv2.imread('/Users/aure/Desktop/i4health/project/endoSim/endosim/algorithms/images/00000001.jpg')
+
+    #reduced_msk1 =
+    #reduced_msk2 =
+    # select only locations within the mask and only select every 10 (to reduce num of points)
+    locations1 = np.argwhere(mask1+msk[:,:,1])[::100,:]
+    locations2 = np.argwhere(mask2+msk[:,:,1])[::100,:]
+
+    kp1 = []
+    kp2 = []
+    for loc1,loc2 in zip(locations1, locations2):
+
+        x1,y1 = np.asarray(loc1, dtype=float)
+        x2,y2 = np.asarray(loc2, dtype=float)
+
+        kp1.append(cv2.KeyPoint(y1,x1,1))
+        kp2.append(cv2.KeyPoint(y2,x2,1))
+
+    return kp1, kp2
+
+
+def get_corrected_img(img1, img2, mask1, mask2):
     MIN_MATCHES = 50
 
     orb = cv2.ORB_create(nfeatures=500)
-    kp1, des1 = orb.detectAndCompute(img1, None)
-    kp2, des2 = orb.detectAndCompute(img2, None)
+
+    kp1, kp2 = gen_keypoints(img1, img2, mask1, mask2)
+
+    kp1, des1 = orb.compute(img1, kp1)
+    kp2, des2 = orb.compute(img2, kp2)
 
     index_params = dict(algorithm=6,
                         table_number=6,
@@ -81,7 +107,7 @@ def get_corrected_img(img1, img2):
     for m, n in matches:
         if m.distance < 0.75 * n.distance:
             good_matches.append(m)
-
+    '''
     if len(good_matches) > MIN_MATCHES:
         src_points = np.float32([kp1[m.queryIdx].pt for m in good_matches]).reshape(-1, 1, 2)
         dst_points = np.float32([kp2[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
@@ -89,7 +115,8 @@ def get_corrected_img(img1, img2):
         corrected_img = cv2.warpPerspective(img1, m, (img2.shape[1], img2.shape[0]))
 
         return corrected_img
-    return img2
+    '''
+    return img1, img2, kp1, kp2, good_matches
 
 
 def detect_points():
@@ -112,12 +139,15 @@ def detect_points():
             #plt_image_histogram(gray)
             #plt_colored_hist(frame)
 
-
-            plt_points(gray, frame)
             if frame_num == 0:
+                mask, mask_lower = plt_points(gray, frame)
                 im1 = gray
+                mask1 = mask_lower
             if frame_num == 300:
+                mask, mask_lower = plt_points(gray, frame)
                 im2 = gray
+                mask2 = mask_lower
+                break
         #speckle = np.where(gray >200)
         #plt.imshow(frame)
         #plt.scatter(speckle[0], speckle[1],marker='x', color="white")
@@ -132,13 +162,16 @@ def detect_points():
     cap.release()
     cv2.destroyAllWindows()
 
-    return im1, im2
+    return im1, im2, mask1, mask2
 
 
 def main():
-    im1, im2= detect_points()
-    img = get_corrected_img(im1, im2)
-    cv2.imshow('Corrected image', img)
+    im1, im2, mask1, mask2= detect_points()
+    img1, img2,kp1, kp2,  good_matches = get_corrected_img(im1, im2, mask1, mask2)
+
+    img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,good_matches,flags=2)
+
+    cv2.imshow('Corrected image', img3)
     cv2.waitKey()
     return
 
