@@ -370,6 +370,7 @@ def add_noise_to_points(points_in, sigma):
     Returns:
         same points but with random noise added to them
     """
+    
     points_out = np.zeros((points_in.shape))
     for r in range(points_in.shape[0]):
         for c in range(points_in.shape[1]):
