@@ -6,6 +6,8 @@
 .coverage
 *.pyc
 .pytest_cache/
+__pycache__/
+*-checkpoint*
 
 # PyInstaller
 build/
@@ -13,3 +15,12 @@ dist/
 
 # Jupyter output
 doc/notebooks/.ipynb_checkpoints/
+
+# folders
+DenseDescriptorLearning/
+calibrations/
+
+#files
+*.MP4
+*.bin
+*.gif

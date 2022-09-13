@@ -2,9 +2,41 @@
 # It is used by pip to manage software dependencies. It is not to be
 # confused with the software requirements, which are listed in
 # doc/requirements.rst
+
+# notebooks requirements
+#
 numpy
 matplotlib
 ipykernel
 jupyter
 nbsphinx
 scikit-surgerycore
+scipy==1.8.1
+opencv-contrib-python-headless==4.5.5.64
+nibabel
+Pillow==9.2.0
+# for these try with conda if pip doesnt work:
+PySide2# 5.15.5
+vtk # 9.0.3
+scikit-surgeryvtk# 0.16.1
+
+
+
+## dense descriptor learning
+# opencv-contrib-python-headless==4.5.5.64
+# matplotlib
+# np
+pathlib==1.0.1
+torch==1.12.0
+torchsummary==1.5.1
+torchvision==0.13.0
+tqdm==4.64.0
+tensorboardX==2.5.1
+albumentations==1.2.1
+plyfile==0.7.4
+PyYAML==5.4.1
+
+#tensorflow-macos
+#==2.9.1
+
+#, argparse, pickle, datetime, random, shutil

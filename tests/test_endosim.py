@@ -2,25 +2,11 @@
 
 """endoSim tests"""
 
-from endosim.ui.endosim_demo import run_demo
-from endosim.algorithms import addition, multiplication
 
-# Pytest style
-def test_using_pytest_endosim():
-    """First test"""
-    #pylint:disable=invalid-name
-    x = 1
-    y = 2
-    verbose = False
-    multiply = False
 
-    expected_answer = 3
-    assert run_demo(x, y, multiply, verbose) == expected_answer
 
-def test_addition():
+def test_dummy():
     """ Test addition """
-    assert addition.add_two_numbers(1, 2) == 3
+    assert True
 
-def test_multiplication():
-    """ Test multiplication """
-    assert multiplication.multiply_two_numbers(2, 2) == 4
+
